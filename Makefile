@@ -1,15 +1,17 @@
 CC = gcc
-CFLAGS = -Wall -Wextra -O2 -pthread
+CFLAGS = -Wall -Wextra -O2 -pthread -std=c11 -D_DEFAULT_SOURCE
+BINS = nameserver storageserver client
 
-all: nameserver client
+all: $(BINS)
 
-nameserver: src/nameserver.c
-	$(CC) $(CFLAGS) -o $@ $<
+%: src/%.c src/common.c src/common.h
+	$(CC) $(CFLAGS) -o $@ $< src/common.c
 
-client: src/client.c
-	$(CC) $(CFLAGS) -o $@ $<
+test: all
+	./tests/e2e.sh
 
 clean:
-	rm -f nameserver client
+	rm -f $(BINS)
+	rm -rf tests/tmp
 
-.PHONY: all clean
+.PHONY: all test clean

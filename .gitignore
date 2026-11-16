@@ -1,2 +1,4 @@
 nameserver
+storageserver
 client
+tests/tmp/
