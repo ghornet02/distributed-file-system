@@ -4,16 +4,7 @@ A distributed file system written in C with POSIX sockets and pthreads. A centra
 
 ## Architecture
 
-```
-                 CREATE / DELETE / VIEW / INFO / READ / WRITE
-   Client  ─────────────────────────────────────────────────▶  Name Server
-     │   ◀──── SS <ip> <port> <request>  (redirect) ─────────    │    ▲
-     │                                                          │    │ REGISTER_SS
-     │          READ / WRITE                     CREATE / DELETE│    │ (heartbeat every 5 s)
-     ▼                                                          ▼    │
-   Storage Server 1 … N  ◀────────────────────────────────────────────┘
-     (files on local disk)
-```
+![Architecture diagram](docs/architecture.png)
 
 - **Metadata/data split:** the Name Server never touches file contents. READ and WRITE requests get a redirect to the storage server that holds the file, so data moves directly between that server and the client.
 - **Load balancing:** each new file goes to the live storage server that holds the fewest files.
@@ -96,3 +87,4 @@ make test
 | `src/client.c` | Interactive client with redirect handling |
 | `src/common.c` / `src/common.h` | Sockets, line framing, dot-stuffing, file-name validation |
 | `tests/e2e.sh` | End-to-end test suite |
+| `docs/architecture.py` | Generates the architecture diagram |
